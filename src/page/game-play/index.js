@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.scss";
 import NavBar from "../../Component/NavBar";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
@@ -7,12 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { useSelector } from "react-redux";
-import "./index.scss";
-
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function GamePlay() {
-  const [test, setTest] = useState(true);
+  const [loading, setLoading] = useState(null);
+  const [test, setTest] = useState(false);
 
   const navigate = useNavigate();
 
@@ -20,8 +20,10 @@ export default function GamePlay() {
   const namePlayer = useSelector((state) => state.users.users);
 
   const handleAnswer = () => {
+    setLoading(true);
     setTimeout(() => {
-      setTest(false);
+      setTest(true);
+      setLoading(false);
     }, 1000);
   };
   return (
@@ -45,52 +47,61 @@ export default function GamePlay() {
           const namePlayerOne = C[0];
           const namePlayerTwo = C[1];
           const nameApi = C[2];
-
           return (
             <div className='item'>
-              <div>
-                <h2>
-                  <Badge bg='secondary'>Round : {i + 1}</Badge>
-                </h2>
-              </div>
-              <div className='item-player'>
-                {test === false && (
-                  <>
-                    <div>
-                      <p> {namePlayerOne}</p>{" "}
-                      <button
-                        className={
-                          e[namePlayerOne] === "yes" ? "color-yes" : "color-no"
-                        }
-                      >
-                        {e[namePlayerOne]}
-                      </button>
-                    </div>
-                    <div>
-                      <p>{namePlayerTwo}</p>{" "}
-                      <button
-                        className={
-                          e[namePlayerTwo] === "yes" ? "color-yes" : "color-no"
-                        }
-                      >
-                        {e[namePlayerTwo]}
-                      </button>
-                    </div>
-                  </>
-                )}
-                {test === true && (
+              {loading === true ? (
+                <Skeleton height={300} />
+              ) : (
+                <>
                   <div>
-                    <div className='result'>
-                      <p>Result :</p> <button>{e[nameApi]}</button>
-                    </div>
-                    <div>
-                      <p className='player-win'>
-                        <Badge bg='secondary'>Win : {e.win}</Badge>
-                      </p>
-                    </div>
+                    <h2>
+                      <Badge bg='secondary'>Round : {i + 1}</Badge>
+                    </h2>
                   </div>
-                )}
-              </div>
+                  <div className='item-player'>
+                    {test === false && (
+                      <>
+                        <div>
+                          <p> {namePlayerOne}</p>{" "}
+                          <button
+                            className={
+                              e[namePlayerOne] === "yes"
+                                ? "color-yes"
+                                : "color-no"
+                            }
+                          >
+                            {e[namePlayerOne]}
+                          </button>
+                        </div>
+                        <div>
+                          <p>{namePlayerTwo}</p>{" "}
+                          <button
+                            className={
+                              e[namePlayerTwo] === "yes"
+                                ? "color-yes"
+                                : "color-no"
+                            }
+                          >
+                            {e[namePlayerTwo]}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                    {test === true && (
+                      <div>
+                        <div className='result'>
+                          <p>Result :</p> <button>{e[nameApi]}</button>
+                        </div>
+                        <div>
+                          <p className='player-win'>
+                            <Badge bg='secondary'>Win : {e.win}</Badge>
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           );
         })}

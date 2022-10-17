@@ -23,9 +23,6 @@
   gap: 10px;
   grid-auto-rows: minmax(100px, auto);
   .item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
   }
   .item-player {
     display: flex;

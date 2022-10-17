@@ -5,15 +5,13 @@ import Button from "react-bootstrap/Button";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { dataAnswer, answerAPI } from "../../features/Users";
+import { dataAnswer } from "../../features/Users";
 
 const axios = require("axios");
 function GameManagement() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const [image, SetImage] = useState(null);
   const [isLastPlayer, setIsLastPlayer] = useState(false);
-  const [isFinish, setIsFinish] = useState(false);
 
   const users = useSelector((state) => state.users.users);
   const limitMatch = useSelector((state) => state.users.limitMatch);
@@ -23,20 +21,14 @@ function GameManagement() {
   const NO = "no";
   const [answer, setAnswer] = useState(null);
   const [match, setMatch] = useState(1);
-  const [isCorrect, setIsCorrect] = useState(null);
   const [indexPlayer, setIndexPlayer] = useState(1);
   const [playerOne, setPlayerOne] = useState();
   const [playerTwo, setPlayerTwo] = useState();
-  const [namePlayers, setNamePlayers] = useState();
 
   const [answerPlayerOne, setAnswerPlayerOne] = useState();
   const [answerPlayerTwo, setAnswerPlayerTwo] = useState();
 
   useEffect(() => {
-    setNamePlayers({
-      index: 0,
-      name: users[0].name,
-    });
     setPlayerOne(users[0].name);
     setPlayerTwo(users[1].name);
   }, []);
@@ -48,18 +40,22 @@ function GameManagement() {
     setAnswer(value);
   };
   const handleAnswer = async () => {
-    setIndexPlayer(indexPlayer + 1);
-    setAnswer(null);
-    if (indexPlayer === 1) {
-      setAnswerPlayerOne(answer);
-    } else if (indexPlayer === 2) {
-      setAnswerPlayerTwo(answer);
+    if (answer) {
+      setIndexPlayer(indexPlayer + 1);
+      setAnswer(null);
+      if (indexPlayer === 1) {
+        setAnswerPlayerOne(answer);
+      } else if (indexPlayer === 2) {
+        setAnswerPlayerTwo(answer);
+      } else {
+        return;
+      }
+      if (indexPlayer === 2) {
+        setIndexPlayer(null);
+        setIsLastPlayer(true);
+      }
     } else {
-      return;
-    }
-    if (indexPlayer === 2) {
-      setIndexPlayer(null);
-      setIsLastPlayer(true);
+      alert("Please choose the answer !");
     }
   };
   const handleNext = async () => {
@@ -81,7 +77,6 @@ function GameManagement() {
     setIndexPlayer(1);
     setMatch(match + 1);
     setIsLastPlayer(false);
-    // setIsLoading(false);
     if (match === limitMatch && users[users.length - 1]) {
       await axios({
         method: "get",
@@ -101,14 +96,13 @@ function GameManagement() {
       });
     }
   };
-  console.log("playerOne", playerOne, playerTwo);
   return (
     <div className='screenGameManagement'>
       <NavBar />
       <div className='containerScreenGameManagement'>
         <div className='match'>Match {match}</div>
         {indexPlayer === null ? (
-          <div></div>
+          <div className='player'>Continue</div>
         ) : (
           <div className='player'>
             Player : {indexPlayer === 1 ? playerOne : playerTwo}
@@ -125,22 +119,6 @@ function GameManagement() {
           >
             Yes
           </Button>
-          <div className='defaultDiv'>
-            {isCorrect != null &&
-              (typeof isCorrect === "boolean" ? (
-                <img className='gifImage' src={image} />
-              ) : (
-                <div
-                  className={`result ${
-                    isCorrect === "Correct"
-                      ? "backgroup-correct"
-                      : "backgroup-incorrect"
-                  }`}
-                >
-                  <h3>{isCorrect}</h3>
-                </div>
-              ))}
-          </div>
           <Button
             className={answer === "no" && "backgroup-no"}
             variant='outline-warning'

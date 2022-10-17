@@ -9,7 +9,6 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import BootstrapTable from "react-bootstrap-table-next";
-import { searchPlayerName } from "../../features/Users";
 
 function History() {
   const dispatch = useDispatch();
@@ -19,31 +18,31 @@ function History() {
 
   const [searchNamePlayer, setSearchNamePlayer] = useState();
 
-  const handleSearch = () => {
-    dispatch(
-      searchPlayerName({
-        searchNamePlayer,
-      })
-    );
-  };
   const CovertObjInArray = Object.values(answers);
+
   const result = CovertObjInArray.reduce((pre, cur) => {
     const listNames = Object.keys(cur).slice(0, -2);
     const answerApi = cur.answerApi;
+    const win = cur.win;
+
     listNames.forEach((name) => {
       if (pre[name]) {
         pre[name].answer.push(cur[name]);
         pre[name].answerApi.push(answerApi);
+        if (win.includes(pre[name].name)) pre[name].score += 1;
       } else {
         pre[name] = {
           name: name,
           answer: [cur[name]],
           answerApi: [answerApi],
+          score: 0,
+          isValid: true,
         };
       }
     });
     return pre;
   }, {});
+
   const data = Object.values(result);
   const products = data.map((e) => {
     return {
@@ -66,12 +65,23 @@ function History() {
       dataField: "answerApi",
       text: "Result",
     },
-    // {
-    //   dataField: "score",
-    //   text: "Score",
-    // },
   ];
-
+  const handleSearch = () => {
+    Object.keys(result).forEach((e) => {
+      if (
+        e === searchNamePlayer ||
+        searchNamePlayer === "" ||
+        searchNamePlayer === undefined
+      ) {
+        result[e].isValid = true;
+      } else {
+        result[e].isValid = false;
+      }
+    });
+  };
+  useEffect(() => {
+    handleSearch();
+  }, [searchNamePlayer]);
   return (
     <div className='screenGameManagement'>
       <NavBar />
@@ -99,20 +109,22 @@ function History() {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(result).map((e, index) => (
-            <tr key={index}>
-              {console.log("e", e)}
-              <td>{e}</td>
-              {/* <td>
-                {(
-                  (100 / answers[e].answerPlayer.length) *
-                  answers[e].score
-                ).toFixed(1)}
-                %
-              </td>
-              <td>{answers[e].score}</td> */}
-            </tr>
-          ))}
+          {Object.keys(result).map(
+            (e, index) =>
+              result[e].isValid && (
+                <tr key={index}>
+                  <td>{e}</td>
+                  <td>
+                    {(
+                      (100 / result[e].answer.length) *
+                      result[e].score
+                    ).toFixed(1)}
+                    %
+                  </td>
+                  <td>{result[e].score}</td>
+                </tr>
+              )
+          )}
         </tbody>
       </Table>
       <h2 className='titleWinner'>The Winner is :</h2>
