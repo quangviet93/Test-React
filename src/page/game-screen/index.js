@@ -59,24 +59,6 @@ function GameManagement() {
     }
   };
   const handleNext = async () => {
-    await axios({
-      method: "get",
-      url: "https://yesno.wtf/api",
-    }).then(function (res, req) {
-      dispatch(
-        dataAnswer({
-          match,
-          playerOne,
-          playerTwo,
-          answerPlayerOne,
-          answerPlayerTwo,
-          answerApi: res.data.answer,
-        })
-      );
-    });
-    setIndexPlayer(1);
-    setMatch(match + 1);
-    setIsLastPlayer(false);
     if (match === limitMatch && users[users.length - 1]) {
       await axios({
         method: "get",
@@ -94,6 +76,25 @@ function GameManagement() {
         );
         navigate("/GamePlay");
       });
+    } else {
+      await axios({
+        method: "get",
+        url: "https://yesno.wtf/api",
+      }).then(function (res, req) {
+        dispatch(
+          dataAnswer({
+            match,
+            playerOne,
+            playerTwo,
+            answerPlayerOne,
+            answerPlayerTwo,
+            answerApi: res.data.answer,
+          })
+        );
+      });
+      setIndexPlayer(1);
+      setMatch(match + 1);
+      setIsLastPlayer(false);
     }
   };
   return (

@@ -28,7 +28,6 @@ export const userSlice = createSlice({
     },
     dataAnswer: (state, action) => {
       const currentMatch = action.payload;
-      console.log("currentMatch", currentMatch);
       const answerPlayerOne = action.payload.playerOne;
       const answerPlayerTwo = action.payload.playerTwo;
       if (!state.answer[currentMatch.match]) {
@@ -78,22 +77,18 @@ export const userSlice = createSlice({
       state.answer[currentMatch.match].answerApi = currentMatch.answerApi;
       if (currentMatch.answerPlayerOne === currentMatch.answerApi) {
         state.answer[currentMatch.match].win = [answerPlayerOne];
-        state.history[currentMatch.playerOne].score =
-          state.history[currentMatch.playerOne].score + 1;
+        state.history[currentMatch.playerOne].score += 1;
       }
       if (currentMatch.answerPlayerTwo === currentMatch.answerApi) {
         state.answer[currentMatch.match].win = [answerPlayerTwo];
-        state.history[currentMatch.playerTwo].score =
-          state.history[currentMatch.playerTwo].score + 1;
+        state.history[currentMatch.playerTwo].score += 1;
       }
       if (
         currentMatch.answerPlayerOne === currentMatch.answerApi &&
         currentMatch.answerPlayerTwo === currentMatch.answerApi
       ) {
-        state.history[currentMatch.playerOne].score =
-          state.history[currentMatch.playerOne].score + 1;
-        state.history[currentMatch.playerTwo].score =
-          state.history[currentMatch.playerTwo].score + 1;
+        state.history[currentMatch.playerOne].score += 1;
+        state.history[currentMatch.playerTwo].score += 1;
         state.answer[currentMatch.match].win = [
           answerPlayerOne,
           answerPlayerTwo,
