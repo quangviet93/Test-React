@@ -1,0 +1,11 @@
+.containerTitleGame {
+  padding: 50px 100px;
+}
+.titleGame {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+}
+.descriptionGame {
+  text-align: center;
+}

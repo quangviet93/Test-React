@@ -1,0 +1,155 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-size: 50px;
+}
+p {
+  font-size: 30px;
+}
+.title-game {
+  font-size: 50px;
+}
+.screenStartGame,
+.screenAddPlayer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.tableUserList {
+  max-width: 400px;
+  margin: 0 auto;
+}
+.buttonAddPlayer {
+  height: 50px;
+}
+.buttonListPlayer {
+  display: flex;
+  justify-content: space-between;
+}
+.buttonListPlayer button {
+  height: 50px;
+}
+.screenGameManagement {
+  padding: 50px;
+}
+.containerScreenGameManagement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.yesOrno {
+  display: flex;
+  max-height: 300px;
+}
+.yesOrno .result {
+  width: 50%;
+}
+.yesOrno button {
+  width: 200px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+  font-size: 60px;
+}
+.match {
+  background-color: gray;
+  border-radius: 10px;
+  padding: 40px;
+  font-size: 30px;
+}
+.player {
+  padding: 40px;
+  font-size: 30px;
+}
+.answer {
+  display: flex;
+  padding: 0 30px;
+}
+.imageAnswer button {
+  margin-top: 100px;
+}
+.backgroup-yes {
+  background-color: #0dcaf0 !important;
+  color: #000 !important;
+}
+.backgroup-no {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+.gifImage {
+  height: 200px;
+  width: 300px;
+}
+.backgroup-incorrect {
+  background-color: red !important;
+  color: #fff;
+}
+.backgroup-correct {
+  background-color: #19ff00 !important;
+}
+.result {
+  text-align: center;
+  border-radius: 2px;
+}
+.defaultDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px !important;
+  height: 200px !important;
+}
+.inputSearch {
+  max-width: 50%;
+  margin: 30px 0px;
+}
+.buttonEndGame,
+.titleWinner {
+  display: flex;
+  justify-content: center;
+}
+.titleWinner {
+  color: #19ff00;
+}

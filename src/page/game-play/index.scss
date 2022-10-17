@@ -1,0 +1,64 @@
+.game-play {
+  padding: 50px;
+}
+.name-players {
+  display: flex;
+  padding: 30px 0;
+  .name-player {
+    display: flex;
+    gap: 30px;
+    padding: 0 30px;
+  }
+}
+.color-yes {
+  color: rgb(0, 255, 21);
+}
+.color-no {
+  color: red;
+}
+.item-round {
+  display: grid;
+  grid-auto-columns: 1 1 1;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .item-player {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      button {
+        width: 100px;
+        background: white;
+        font-size: 20px;
+        font-weight: 900;
+        border: 1px solid grey;
+      }
+    }
+
+    .result {
+      padding: 50px 0;
+      flex-direction: row;
+      p {
+        margin: 0 !important;
+      }
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+.button-submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}
