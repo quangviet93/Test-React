@@ -9,48 +9,16 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import BootstrapTable from "react-bootstrap-table-next";
+import { searchPlayerName } from "../../features/Users";
 
 function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const answers = useSelector((state) => state.users.answer);
+  const answersHistory = useSelector((state) => state.users.history);
 
   const [searchNamePlayer, setSearchNamePlayer] = useState();
 
-  const CovertObjInArray = Object.values(answers);
-
-  const result = CovertObjInArray.reduce((pre, cur) => {
-    const listNames = Object.keys(cur).slice(0, -2);
-    const answerApi = cur.answerApi;
-    const win = cur.win;
-
-    listNames.forEach((name) => {
-      if (pre[name]) {
-        pre[name].answer.push(cur[name]);
-        pre[name].answerApi.push(answerApi);
-        if (win.includes(pre[name].name)) pre[name].score += 1;
-      } else {
-        pre[name] = {
-          name: name,
-          answer: [cur[name]],
-          answerApi: [answerApi],
-          score: 0,
-          isValid: true,
-        };
-      }
-    });
-    return pre;
-  }, {});
-
-  const data = Object.values(result);
-  const products = data.map((e) => {
-    return {
-      ...e,
-      answerApi: e.answerApi.join(" | "),
-      answer: e.answer.join(" | "),
-    };
-  });
   const columns = [
     {
       dataField: "name",
@@ -66,22 +34,39 @@ function History() {
       text: "Result",
     },
   ];
+
+  const point = Object.keys(answersHistory).map((e) => {
+    return answersHistory[e].score;
+  });
+
+  const biggestPoint = point.sort(function (a, b) {
+    return a - b;
+  });
+
+  const winner = Object.keys(answersHistory).filter((e) => {
+    if (answersHistory[e].score === biggestPoint[biggestPoint.length - 1]) {
+      return answersHistory[e].name;
+    }
+  });
+
   const handleSearch = () => {
-    Object.keys(result).forEach((e) => {
-      if (
-        e === searchNamePlayer ||
-        searchNamePlayer === "" ||
-        searchNamePlayer === undefined
-      ) {
-        result[e].isValid = true;
-      } else {
-        result[e].isValid = false;
-      }
-    });
+    dispatch(
+      searchPlayerName({
+        searchNamePlayer,
+      })
+    );
   };
   useEffect(() => {
     handleSearch();
   }, [searchNamePlayer]);
+  const CovertObjInArray = Object.values(answersHistory);
+  const products = CovertObjInArray.map((e) => {
+    return {
+      ...e,
+      answerApi: e.answerApi.join(" | "),
+      answer: e.answer.join(" | "),
+    };
+  });
   return (
     <div className='screenGameManagement'>
       <NavBar />
@@ -109,25 +94,25 @@ function History() {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(result).map(
+          {Object.keys(answersHistory).map(
             (e, index) =>
-              result[e].isValid && (
+              answersHistory[e].isValid && (
                 <tr key={index}>
-                  <td>{e}</td>
+                  <td>{answersHistory[e].name}</td>
                   <td>
                     {(
-                      (100 / result[e].answer.length) *
-                      result[e].score
+                      (100 / answersHistory[e].answer.length) *
+                      answersHistory[e].score
                     ).toFixed(1)}
                     %
                   </td>
-                  <td>{result[e].score}</td>
+                  <td>{answersHistory[e].score}</td>
                 </tr>
               )
           )}
         </tbody>
       </Table>
-      <h2 className='titleWinner'>The Winner is :</h2>
+      <h2 className='titleWinner'>The Winner is : {winner[0]}</h2>
       <div className='buttonEndGame'>
         <Button
           variant='secondary'
