@@ -15,8 +15,7 @@ function History() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const answersHistory = useSelector((state) => state.users.history);
-
+  const answersHistory = useSelector((state) => state.users.answer);
   const [searchNamePlayer, setSearchNamePlayer] = useState();
 
   const columns = [
@@ -50,11 +49,7 @@ function History() {
   });
 
   const handleSearch = () => {
-    dispatch(
-      searchPlayerName({
-        searchNamePlayer,
-      })
-    );
+    dispatch(searchPlayerName(searchNamePlayer));
   };
   useEffect(() => {
     handleSearch();
@@ -63,8 +58,9 @@ function History() {
   const products = CovertObjInArray.map((e) => {
     return {
       ...e,
-      answerApi: e.answerApi.join(" | "),
-      answer: e.answer.join(" | "),
+
+      answerApi: e.answersApi.join(" | "),
+      answer: e.answers.join(" | "),
     };
   });
   return (
@@ -94,22 +90,19 @@ function History() {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(answersHistory).map(
-            (e, index) =>
-              answersHistory[e].isValid && (
-                <tr key={index}>
-                  <td>{answersHistory[e].name}</td>
-                  <td>
-                    {(
-                      (100 / answersHistory[e].answer.length) *
-                      answersHistory[e].score
-                    ).toFixed(1)}
-                    %
-                  </td>
-                  <td>{answersHistory[e].score}</td>
-                </tr>
-              )
-          )}
+          {Object.keys(answersHistory).map((e, index) => (
+            <tr key={index}>
+              <td>{answersHistory[e].name}</td>
+              <td>
+                {(
+                  (100 / answersHistory[e].answers.length) *
+                  answersHistory[e].score
+                ).toFixed(1)}
+                %
+              </td>
+              <td>{answersHistory[e].score}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
       <h2 className='titleWinner'>The Winner is : {winner[0]}</h2>

@@ -73,16 +73,16 @@ function ModalCustom(props) {
           </InputGroup>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant='secondary' onClick={props.handleCloseReply}>
+            Cancel
+          </Button>
           <Button
-            variant='secondary'
+            variant='primary'
             onClick={() => {
               handleSubmit();
             }}
           >
             Add
-          </Button>
-          <Button variant='primary' onClick={props.handleCloseReply}>
-            Cancel
           </Button>
         </Modal.Footer>
       </Modal>

@@ -75,18 +75,8 @@ p {
   padding: 50px;
 }
 .containerScreenGameManagement {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
-.yesOrno {
-  display: flex;
-  max-height: 300px;
-}
-.yesOrno .result {
-  width: 50%;
-}
+
 .yesOrno button {
   width: 200px;
   margin-left: 50px;
@@ -152,4 +142,87 @@ p {
 }
 .titleWinner {
   color: #19ff00;
+}
+
+.yesNo {
+  display: flex;
+  gap: 15px;
+}
+.yesNo div {
+  font-size: 30px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+.fz {
+  font-size: 30px;
+}
+.yesNo .yes {
+  color: green;
+  max-height: 50px;
+  min-width: 100px;
+}
+.yesNo .no {
+  color: red;
+  max-height: 50px;
+  min-width: 100px;
+  text-align: center;
+}
+.yesNo svg {
+  color: #000;
+  margin-right: 5px;
+}
+.round {
+  display: flex;
+  gap: 200px;
+}
+.round-item {
+  min-width: 215px;
+}
+.name-player {
+  margin: 50px 0;
+}
+.btn-sub-answer {
+  text-align: center;
+  margin-top: 100px;
+}
+.btn-sub-answer button {
+  font-size: 25px;
+}
+.image-win {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.image-win img {
+  width: 100%;
+}
+.sum-result,
+.skeletons {
+  display: flex;
+  gap: 200px;
+}
+.item-result {
+  min-width: 215px;
+}
+.result {
+  display: flex;
+}
+.result-content {
+  display: flex;
+  background-color: gray;
+}
+.result-left {
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.result-win {
+  text-align: start;
+}
+.skeleton-custom {
+  min-width: 215px;
 }

@@ -1,4 +1,5 @@
 import "../../App.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "react-bootstrap/Spinner";
 import NavBar from "../../Component/NavBar";
 import Button from "react-bootstrap/Button";
@@ -6,170 +7,187 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { dataAnswer } from "../../features/Users";
+import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import Skeleton from "react-loading-skeleton";
+import image from "../../image1.jpg";
 
 const axios = require("axios");
 function GameManagement() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [isLastPlayer, setIsLastPlayer] = useState(false);
-
   const users = useSelector((state) => state.users.users);
   const limitMatch = useSelector((state) => state.users.limitMatch);
+  const answerStore = useSelector((state) => state.users.answer);
+
+  const [answerPlayerFirst, setAnswerPlayerFirst] = useState([]);
+  const [answerPlayerLast, setAnswerPlayerLast] = useState([]);
+  const [answerApi, setAnswerApi] = useState([]);
+
+  const [winner, setWinner] = useState();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const covertArray = Array.from(Array(limitMatch).keys());
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const YES = "yes";
-  const NO = "no";
-  const [answer, setAnswer] = useState(null);
-  const [match, setMatch] = useState(1);
-  const [indexPlayer, setIndexPlayer] = useState(1);
-  const [playerOne, setPlayerOne] = useState();
-  const [playerTwo, setPlayerTwo] = useState();
-
-  const [answerPlayerOne, setAnswerPlayerOne] = useState();
-  const [answerPlayerTwo, setAnswerPlayerTwo] = useState();
-
   useEffect(() => {
-    setPlayerOne(users[0].name);
-    setPlayerTwo(users[1].name);
-  }, []);
+    setAnswerPlayerFirst(
+      covertArray.map(() => {
+        return "yes";
+      })
+    );
+    setAnswerPlayerLast(
+      covertArray.map(() => {
+        return "no";
+      })
+    );
+    handleWinner();
+    const answerApiStore = Object.values(answerStore)[0]?.answersApi;
+    setAnswerApi(answerApiStore);
+  }, [isLoading, answerStore]);
+  const userFirst = Object.values(answerStore);
+  const handleWinner = () => {
+    let newData = {};
+    userFirst.forEach((user, i) => {
+      user.win.forEach((win, index) => {
+        if (win === true) newData[i + "-" + index] = user.name;
+      });
+      setWinner(newData);
+    });
+  };
 
-  const handleYes = (value) => {
-    setAnswer(value);
-  };
-  const handleNo = (value) => {
-    setAnswer(value);
-  };
   const handleAnswer = async () => {
-    if (answer) {
-      setIndexPlayer(indexPlayer + 1);
-      setAnswer(null);
-      if (indexPlayer === 1) {
-        setAnswerPlayerOne(answer);
-      } else if (indexPlayer === 2) {
-        setAnswerPlayerTwo(answer);
-      } else {
-        return;
-      }
-      if (indexPlayer === 2) {
-        setIndexPlayer(null);
-        setIsLastPlayer(true);
-      }
-    } else {
-      alert("Please choose the answer !");
-    }
-  };
-  const handleNext = async () => {
-    if (match === limitMatch && users[users.length - 1]) {
+    let answersApi = [];
+    setIsLoading(null);
+    covertArray.forEach(async () => {
       await axios({
         method: "get",
         url: "https://yesno.wtf/api",
-      }).then(function (res, req) {
-        dispatch(
-          dataAnswer({
-            match,
-            playerOne,
-            playerTwo,
-            answerPlayerOne,
-            answerPlayerTwo,
-            answerApi: res.data.answer,
-          })
-        );
-        navigate("/GamePlay");
-      });
-    } else {
-      await axios({
-        method: "get",
-        url: "https://yesno.wtf/api",
-      }).then(function (res, req) {
-        dispatch(
-          dataAnswer({
-            match,
-            playerOne,
-            playerTwo,
-            answerPlayerOne,
-            answerPlayerTwo,
-            answerApi: res.data.answer,
-          })
-        );
-      });
-      setIndexPlayer(1);
-      setMatch(match + 1);
-      setIsLastPlayer(false);
-    }
+      })
+        .then(function (res, req) {
+          let api = res.data.answer;
+          answersApi = [...answersApi, api];
+          let result = {};
+          users.forEach((user) => {
+            let data = {
+              score: 0,
+              win: [],
+              date: "",
+              isValid: false,
+            };
+            if (user.id === 1) {
+              data.name = user.name;
+              data.answers = answerPlayerFirst;
+              data.answersApi = answersApi;
+              data.date = new Date();
+              answerPlayerFirst.forEach((item, index) => {
+                if (item === answersApi[index]) {
+                  data.score += 1;
+                  data.win.push(true);
+                } else {
+                  data.win.push(false);
+                }
+              });
+            } else {
+              data.name = user.name;
+              data.answers = answerPlayerLast;
+              data.answersApi = answersApi;
+              data.date = new Date();
+              answerPlayerLast.forEach((item, index) => {
+                if (item === answersApi[index]) {
+                  data.score += 1;
+                  data.win.push(true);
+                } else {
+                  data.win.push(false);
+                }
+              });
+            }
+            result[user.name] = data;
+          });
+          dispatch(dataAnswer(result));
+          setIsLoading(true);
+        })
+        .catch((error) => console.log(error));
+    });
+    setAnswerApi(answersApi);
   };
   return (
     <div className='screenGameManagement'>
       <NavBar />
       <div className='containerScreenGameManagement'>
-        <div className='match'>Match {match}</div>
-        {indexPlayer === null ? (
-          <div className='player'>Continue</div>
-        ) : (
-          <div className='player'>
-            Player : {indexPlayer === 1 ? playerOne : playerTwo}
-          </div>
-        )}
-        <div></div>
-        <div className='yesOrno'>
-          <Button
-            className={answer === "yes" && "backgroup-yes"}
-            variant='outline-info'
-            onClick={() => {
-              handleYes(YES);
-            }}
-          >
-            Yes
-          </Button>
-          <Button
-            className={answer === "no" && "backgroup-no"}
-            variant='outline-warning'
-            onClick={() => {
-              handleNo(NO);
-            }}
-          >
-            No
-          </Button>
+        <div className='fz name-player'>Player : ABC , BCD</div>
+        <div className='round'>
+          {covertArray.map((e) => (
+            <div className='round-item'>
+              <div className='fz'>Round {e + 1}:</div>
+              {isLoading === false && (
+                <div className='yesNo'>
+                  <div className='yes'>
+                    <FontAwesomeIcon icon={faCheck} />
+                    YES
+                  </div>
+                  <div className='no'>
+                    <FontAwesomeIcon icon={faXmark} />
+                    NO
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-        {isLastPlayer ? (
-          // <div className='imageAnswer'>
-          //   <Button
-          //     variant='primary'
-          //     onClick={() => {
-          //       navigate("/GamePlay");
-          //     }}
-          //   >
-          //     View
-          //   </Button>
-          // </div>
-          // ) : isLastPlayer ? (
-          <div className='imageAnswer'>
-            <Button
-              variant='secondary'
-              onClick={() => {
-                handleNext();
-              }}
-            >
-              Next
-            </Button>
-          </div>
-        ) : (
-          <div className='imageAnswer'>
-            {!isLoading ? (
-              <Button
-                variant='primary'
-                onClick={() => {
-                  handleAnswer();
-                }}
-              >
-                Submit
-              </Button>
-            ) : (
-              <Spinner animation='border' role='status'>
-                <span className='visually-hidden'>Loading...</span>
-              </Spinner>
-            )}
+        {isLoading === null && (
+          <div className='skeletons'>
+            {covertArray.map(() => (
+              <div className='skeleton-custom'>
+                <Skeleton height={100} />
+              </div>
+            ))}
           </div>
         )}
+        {isLoading === true && (
+          <>
+            <div>
+              <div className='sum-result'>
+                {answerApi.map((e, index) => (
+                  <div className='item-result'>
+                    {Object.values(winner).map((y, indexAfter) => (
+                      <>
+                        <div className='result'>
+                          <div className='result-content'>
+                            {indexAfter === index && (
+                              <>
+                                <div className='result-left'>
+                                  <div>{"Result : " + e}</div>
+                                  <div className='result-win'>
+                                    {"Win : " + y}
+                                  </div>
+                                </div>
+                                <div className='image-win'>
+                                  <img src={image} />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div></div>
+            </div>
+          </>
+        )}
+        <div className='btn-sub-answer'>
+          {isLoading === false ? (
+            <Button variant='danger' onClick={handleAnswer}>
+              Submit Answer
+            </Button>
+          ) : (
+            <Button variant='success' onClick={() => navigate("/History")}>
+              Summary
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
