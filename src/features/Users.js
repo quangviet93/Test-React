@@ -28,11 +28,11 @@ export const userSlice = createSlice({
       state.answer = action.payload;
     },
     searchPlayerName: (state, action) => {
-      Object.keys(state.history).forEach((name) => {
+      Object.keys(state.answer).forEach((name) => {
         if (
-          action.payload.searchNamePlayer === undefined ||
-          action.payload.searchNamePlayer === "" ||
-          name === action.payload.searchNamePlayer
+          action.payload === undefined ||
+          action.payload === "" ||
+          action.payload === name
         ) {
           state.answer[name].isValid = true;
         } else {

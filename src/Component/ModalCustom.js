@@ -33,8 +33,8 @@ function ModalCustom(props) {
       }
       return;
     }
-    if (limitMatch) {
-      if (props.name === "Match") {
+    if (limitMatch && props.name === "Match") {
+      if (!isNaN(limitMatch) && limitMatch >= 1 && limitMatch < 10) {
         dispatch(
           addMatch({
             limitMatch: limitMatch,
@@ -42,7 +42,12 @@ function ModalCustom(props) {
         );
         props.handleCloseReply();
         navigate("/GameManagement");
+      } else {
+        alert("Not Valid");
+        return;
       }
+    } else {
+      alert("Not Valid");
       return;
     }
   };
@@ -65,7 +70,7 @@ function ModalCustom(props) {
               onChange={(e) => {
                 props.name === "Add" && setNamePlayer(e.target.value);
                 props.name === "Add Player" && setNamePlayer(e.target.value);
-                props.name === "Match" && setLimitMatch(e.target.value);
+                props.name === "Match" && setLimitMatch(Number(e.target.value));
               }}
               aria-label='Large'
               aria-describedby='inputGroup-sizing-sm'

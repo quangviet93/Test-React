@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Spinner from "react-bootstrap/Spinner";
 import NavBar from "../../Component/NavBar";
 import Button from "react-bootstrap/Button";
+import Badge from "react-bootstrap/Button";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -71,14 +72,13 @@ function GameManagement() {
             let data = {
               score: 0,
               win: [],
-              date: "",
+              date: new Date().toLocaleString(),
               isValid: false,
             };
             if (user.id === 1) {
               data.name = user.name;
               data.answers = answerPlayerFirst;
               data.answersApi = answersApi;
-              data.date = new Date();
               answerPlayerFirst.forEach((item, index) => {
                 if (item === answersApi[index]) {
                   data.score += 1;
@@ -91,7 +91,6 @@ function GameManagement() {
               data.name = user.name;
               data.answers = answerPlayerLast;
               data.answersApi = answersApi;
-              data.date = new Date();
               answerPlayerLast.forEach((item, index) => {
                 if (item === answersApi[index]) {
                   data.score += 1;
@@ -114,12 +113,19 @@ function GameManagement() {
     <div className='screenGameManagement'>
       <NavBar />
       <div className='containerScreenGameManagement'>
-        <div className='fz name-player'>Player : ABC , BCD</div>
-        <div className='round'>
-          {covertArray.map((e) => (
-            <div className='round-item'>
-              <div className='fz'>Round {e + 1}:</div>
-              {isLoading === false && (
+        <div className='fz name-player'>
+          <p>
+            <Badge variant='secondary'>Player :</Badge>
+          </p>
+          <p className='playerA'>{users[0].name}</p>
+          <p>,</p>
+          <p className='playerB'>{users[1].name}</p>
+        </div>
+        {isLoading === false && (
+          <div className='round'>
+            {covertArray.map((e) => (
+              <div className='round-item'>
+                <div className='fz'>Round {e + 1}:</div>
                 <div className='yesNo'>
                   <div className='yes'>
                     <FontAwesomeIcon icon={faCheck} />
@@ -130,15 +136,16 @@ function GameManagement() {
                     NO
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {isLoading === null && (
           <div className='skeletons'>
-            {covertArray.map(() => (
-              <div className='skeleton-custom'>
-                <Skeleton height={100} />
+            {covertArray.map((e) => (
+              <div className=''>
+                <Skeleton height={100} width='100%' />
               </div>
             ))}
           </div>
@@ -151,6 +158,9 @@ function GameManagement() {
                   <div className='item-result'>
                     {Object.values(winner).map((y, indexAfter) => (
                       <>
+                        {indexAfter === index && (
+                          <div className='fz'>Round : {indexAfter + 1}</div>
+                        )}
                         <div className='result'>
                           <div className='result-content'>
                             {indexAfter === index && (
@@ -178,11 +188,13 @@ function GameManagement() {
           </>
         )}
         <div className='btn-sub-answer'>
-          {isLoading === false ? (
+          {isLoading === null && <Spinner animation='border' />}
+          {isLoading === false && (
             <Button variant='danger' onClick={handleAnswer}>
               Submit Answer
             </Button>
-          ) : (
+          )}
+          {isLoading === true && (
             <Button variant='success' onClick={() => navigate("/History")}>
               Summary
             </Button>

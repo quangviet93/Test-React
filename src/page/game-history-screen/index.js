@@ -25,6 +25,10 @@ function History() {
       sort: true,
     },
     {
+      dataField: "time",
+      text: "Date",
+    },
+    {
       dataField: "answer",
       text: "Answer",
     },
@@ -42,12 +46,14 @@ function History() {
     return a - b;
   });
 
+  const arrayTest = [];
   const winner = Object.keys(answersHistory).filter((e) => {
+    arrayTest.push(answersHistory[e].score);
+    arrayTest.sort();
     if (answersHistory[e].score === biggestPoint[biggestPoint.length - 1]) {
       return answersHistory[e].name;
     }
   });
-
   const handleSearch = () => {
     dispatch(searchPlayerName(searchNamePlayer));
   };
@@ -58,7 +64,7 @@ function History() {
   const products = CovertObjInArray.map((e) => {
     return {
       ...e,
-
+      time: e.date,
       answerApi: e.answersApi.join(" | "),
       answer: e.answers.join(" | "),
     };
@@ -90,22 +96,28 @@ function History() {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(answersHistory).map((e, index) => (
-            <tr key={index}>
-              <td>{answersHistory[e].name}</td>
-              <td>
-                {(
-                  (100 / answersHistory[e].answers.length) *
-                  answersHistory[e].score
-                ).toFixed(1)}
-                %
-              </td>
-              <td>{answersHistory[e].score}</td>
-            </tr>
-          ))}
+          {Object.keys(answersHistory).map(
+            (e, index) =>
+              answersHistory[e].isValid && (
+                <tr key={index}>
+                  <td>{answersHistory[e].name}</td>
+                  <td>
+                    {(
+                      (100 / answersHistory[e].answers.length) *
+                      answersHistory[e].score
+                    ).toFixed(1)}
+                    %
+                  </td>
+                  <td>{answersHistory[e].score}</td>
+                </tr>
+              )
+          )}
         </tbody>
       </Table>
-      <h2 className='titleWinner'>The Winner is : {winner[0]}</h2>
+      <h2 className='titleWinner'>
+        The Winner is :{" "}
+        {arrayTest[0] === arrayTest[arrayTest.length - 1] ? "Draw" : winner[0]}
+      </h2>
       <div className='buttonEndGame'>
         <Button
           variant='secondary'

@@ -142,6 +142,7 @@ p {
 }
 .titleWinner {
   color: #19ff00;
+  font-size: 50px;
 }
 
 .yesNo {
@@ -174,6 +175,7 @@ p {
 }
 .round {
   display: flex;
+  flex-wrap: wrap;
   gap: 200px;
 }
 .round-item {
@@ -181,6 +183,10 @@ p {
 }
 .name-player {
   margin: 50px 0;
+  display: flex;
+}
+.name-player > p {
+  margin-right: 10px;
 }
 .btn-sub-answer {
   text-align: center;
@@ -199,9 +205,9 @@ p {
 .image-win img {
   width: 100%;
 }
-.sum-result,
-.skeletons {
+.sum-result {
   display: flex;
+  flex-wrap: wrap;
   gap: 200px;
 }
 .item-result {
@@ -225,4 +231,10 @@ p {
 }
 .skeleton-custom {
   min-width: 215px;
+}
+.playerA {
+  color: #19ff00;
+}
+.playerB {
+  color: red;
 }
