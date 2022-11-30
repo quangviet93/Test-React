@@ -6,6 +6,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import usersReducer from "./features/Users";
+import postReducer from "./features/Users";
 import storage from "redux-persist/lib/storage";
 import {
   persistStore,
@@ -20,11 +21,14 @@ import {
 
 const reducers = combineReducers({
   users: usersReducer,
+  post: postReducer,
 });
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["users"],
 };
+
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 const store = configureStore({

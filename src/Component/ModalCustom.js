@@ -18,7 +18,10 @@ function ModalCustom(props) {
 
   const handleSubmit = () => {
     if (namePlayer) {
-      if (props.name === "Add" || props.name === "Add Player") {
+      if (
+        (namePlayer.trim() && props.name === "Add") ||
+        (namePlayer.trim() && props.name === "Add Player")
+      ) {
         dispatch(
           addUser({
             id:

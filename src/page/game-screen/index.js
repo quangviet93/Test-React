@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { dataAnswer } from "../../features/Users";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import image from "../../image1.jpg";
 
 const axios = require("axios");
@@ -110,28 +111,28 @@ function GameManagement() {
     setAnswerApi(answersApi);
   };
   return (
-    <div className='screenGameManagement'>
+    <div className="screenGameManagement">
       <NavBar />
-      <div className='containerScreenGameManagement'>
-        <div className='fz name-player'>
+      <div className="containerScreenGameManagement">
+        <div className="fz name-player">
           <p>
-            <Badge variant='secondary'>Player :</Badge>
+            <Badge variant="secondary">Player :</Badge>
           </p>
-          <p className='playerA'>{users[0].name}</p>
+          <p className="playerA">{users[0].name}</p>
           <p>,</p>
-          <p className='playerB'>{users[1].name}</p>
+          <p className="playerB">{users[1].name}</p>
         </div>
         {isLoading === false && (
-          <div className='round'>
+          <div className="round">
             {covertArray.map((e) => (
-              <div className='round-item'>
-                <div className='fz'>Round {e + 1}:</div>
-                <div className='yesNo'>
-                  <div className='yes'>
+              <div className="round-item">
+                <div className="fz">Round {e + 1}:</div>
+                <div className="yesNo">
+                  <div className="yes">
                     <FontAwesomeIcon icon={faCheck} />
                     YES
                   </div>
-                  <div className='no'>
+                  <div className="no">
                     <FontAwesomeIcon icon={faXmark} />
                     NO
                   </div>
@@ -142,10 +143,11 @@ function GameManagement() {
         )}
 
         {isLoading === null && (
-          <div className='skeletons'>
-            {covertArray.map((e) => (
-              <div className=''>
-                <Skeleton height={100} width='100%' />
+          <div className="sum-result">
+            {covertArray.map((e, i) => (
+              <div className="item-result">
+                <div className="fz">Round : {i + 1}</div>
+                <Skeleton height={100} width="100%" />
               </div>
             ))}
           </div>
@@ -153,25 +155,25 @@ function GameManagement() {
         {isLoading === true && (
           <>
             <div>
-              <div className='sum-result'>
+              <div className="sum-result">
                 {answerApi.map((e, index) => (
-                  <div className='item-result'>
+                  <div className="item-result">
                     {Object.values(winner).map((y, indexAfter) => (
                       <>
                         {indexAfter === index && (
-                          <div className='fz'>Round : {indexAfter + 1}</div>
+                          <div className="fz">Round : {indexAfter + 1}</div>
                         )}
-                        <div className='result'>
-                          <div className='result-content'>
+                        <div className="result">
+                          <div className="result-content">
                             {indexAfter === index && (
                               <>
-                                <div className='result-left'>
+                                <div className="result-left">
                                   <div>{"Result : " + e}</div>
-                                  <div className='result-win'>
+                                  <div className="result-win">
                                     {"Win : " + y}
                                   </div>
                                 </div>
-                                <div className='image-win'>
+                                <div className="image-win">
                                   <img src={image} />
                                 </div>
                               </>
@@ -187,15 +189,15 @@ function GameManagement() {
             </div>
           </>
         )}
-        <div className='btn-sub-answer'>
-          {isLoading === null && <Spinner animation='border' />}
+        <div className="btn-sub-answer">
+          {isLoading === null && <Spinner animation="border" />}
           {isLoading === false && (
-            <Button variant='danger' onClick={handleAnswer}>
+            <Button variant="danger" onClick={handleAnswer}>
               Submit Answer
             </Button>
           )}
           {isLoading === true && (
-            <Button variant='success' onClick={() => navigate("/History")}>
+            <Button variant="success" onClick={() => navigate("/History")}>
               Summary
             </Button>
           )}
